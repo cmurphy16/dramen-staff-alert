@@ -21,12 +21,14 @@ public class FairyRingOverlay extends Overlay
 
 	private final Client client;
 	private final DramenStaffAlertPlugin plugin;
+	private final DramenStaffAlertConfig config;
 
 	@Inject
-	FairyRingOverlay(Client client, DramenStaffAlertPlugin plugin)
+	FairyRingOverlay(Client client, DramenStaffAlertPlugin plugin, DramenStaffAlertConfig config)
 	{
 		this.client = client;
 		this.plugin = plugin;
+		this.config = config;
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 	}
@@ -38,6 +40,10 @@ public class FairyRingOverlay extends Overlay
 		Color fill;
 		if (plugin.meetsFairyRingStaffRequirement())
 		{
+			if (!config.highlightEquipped())
+			{
+				return null;
+			}
 			outline = Color.GREEN;
 			fill = GREEN_FILL;
 		}

@@ -1,5 +1,6 @@
 package com.dramenstaffalert;
 
+import com.google.inject.Provides;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -45,6 +47,12 @@ public class DramenStaffAlertPlugin extends Plugin
 
 	private final Set<GameObject> fairyRings = new HashSet<>();
 	private boolean active;
+
+	@Provides
+	DramenStaffAlertConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(DramenStaffAlertConfig.class);
+	}
 
 	@Override
 	protected void startUp()

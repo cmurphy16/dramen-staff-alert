@@ -8,12 +8,12 @@ import net.runelite.client.config.ConfigItem;
 public interface DramenStaffAlertConfig extends Config
 {
 	@ConfigItem(
-		keyName = "greeting",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
+		keyName = "highlightEquipped",
+		name = "Highlight when equipped",
+		description = "Show green fairy ring tiles when a Dramen/Lunar Staff is equipped or the Lumbridge & Draynor Elite Diary is complete"
 	)
-	default String greeting()
+	default boolean highlightEquipped()
 	{
-		return "Hello";
+		return true;
 	}
 }
