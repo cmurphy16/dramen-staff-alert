@@ -45,6 +45,9 @@ public class DramenStaffAlertPlugin extends Plugin
 	@Inject
 	private FairyRingOverlay overlay;
 
+	@Inject
+	private StaffWarningOverlay staffWarningOverlay;
+
 	private final Set<GameObject> fairyRings = new HashSet<>();
 	private boolean active;
 
@@ -58,7 +61,9 @@ public class DramenStaffAlertPlugin extends Plugin
 	protected void startUp()
 	{
 		active = true;
+		staffWarningOverlay.resetWarning();
 		overlayManager.add(overlay);
+		overlayManager.add(staffWarningOverlay);
 		clientThread.invoke(() ->
 		{
 			if (active && client.getGameState() == GameState.LOGGED_IN)
@@ -89,6 +94,8 @@ public class DramenStaffAlertPlugin extends Plugin
 	{
 		active = false;
 		overlayManager.remove(overlay);
+		overlayManager.remove(staffWarningOverlay);
+		staffWarningOverlay.resetWarning();
 		fairyRings.clear();
 	}
 

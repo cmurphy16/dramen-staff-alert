@@ -73,4 +73,26 @@ public interface DramenStaffAlertConfig extends Config
 	{
 		return Color.RED;
 	}
+
+	@ConfigItem(
+		keyName = "showOverheadWarning",
+		position = 6,
+		name = "Show overhead warning",
+		description = "Show a local overhead reminder when a staff is required but not equipped"
+	)
+	default boolean showOverheadWarning()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "overheadWarningMessage",
+		position = 7,
+		name = "Overhead warning message",
+		description = "Custom text displayed above your player; this message is only visible to you"
+	)
+	default String overheadWarningMessage()
+	{
+		return "Equip your staff";
+	}
 }
