@@ -89,11 +89,11 @@ public interface DramenStaffAlertConfig extends Config
 		keyName = "overheadWarningMessage",
 		position = 7,
 		name = "Equip staff warning message",
-		description = "Custom text displayed above your player; this message is only visible to you"
+		description = "Local unequipped staff text. Supports chat effects"
 	)
 	default String overheadWarningMessage()
 	{
-		return "Equip your staff";
+		return "Equip your Dramen on Lunar staff";
 	}
 
 	@ConfigItem(
@@ -111,10 +111,10 @@ public interface DramenStaffAlertConfig extends Config
 		keyName = "missingStaffWarningMessage",
 		position = 9,
 		name = "Missing staff warning message",
-		description = "Custom text displayed above your player when a required staff is missing; only visible to you"
+		description = "Local missing staff text. Supports chat effects"
 	)
 	default String missingStaffWarningMessage()
 	{
-		return "You need a Dramen or Lunar staff";
+		return "You don't have a Dramen or Lunar staff";
 	}
 }

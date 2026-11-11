@@ -1,6 +1,5 @@
 package com.dramenstaffalert;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.inject.Inject;
@@ -12,7 +11,6 @@ import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.OverlayUtil;
 
 public class StaffWarningOverlay extends Overlay
 {
@@ -25,6 +23,8 @@ public class StaffWarningOverlay extends Overlay
 	private boolean warningTriggered;
 	private boolean missingStaffWarning;
 	private int warningStartCycle;
+	private String cachedMessage;
+	private OverheadMessage styledMessage;
 
 	@Inject
 	StaffWarningOverlay(Client client, DramenStaffAlertPlugin plugin, DramenStaffAlertConfig config)
@@ -68,17 +68,24 @@ public class StaffWarningOverlay extends Overlay
 			return null;
 		}
 
-		if (!warningTriggered || client.getGameCycle() - warningStartCycle >= WARNING_DURATION_CYCLES)
+		int elapsed = client.getGameCycle() - warningStartCycle;
+		if (elapsed >= WARNING_DURATION_CYCLES)
 		{
 			return null;
 		}
 
 		// Draw locally without replacing the player's real overhead chat or sending chat.
+		if (!message.equals(cachedMessage))
+		{
+			cachedMessage = message;
+			styledMessage = OverheadMessage.parse(message);
+		}
 		graphics.setFont(FontManager.getRunescapeBoldFont());
-		Point location = player.getCanvasTextLocation(graphics, message, player.getLogicalHeight() + 40);
+		Point location = player.getCanvasTextLocation(graphics, styledMessage.text, player.getLogicalHeight() + 40);
 		if (location != null)
 		{
-			OverlayUtil.renderTextLocation(graphics, location, message, missingStaffWarning ? Color.RED : Color.YELLOW);
+			int centerX = location.getX() + graphics.getFontMetrics().stringWidth(styledMessage.text) / 2;
+			styledMessage.render(graphics, centerX, location.getY(), elapsed, client.getGameCycle());
 		}
 		return null;
 	}
@@ -105,5 +112,7 @@ public class StaffWarningOverlay extends Overlay
 		warningTriggered = false;
 		missingStaffWarning = false;
 		warningStartCycle = 0;
+		cachedMessage = null;
+		styledMessage = null;
 	}
 }
