@@ -151,4 +151,11 @@ public class DramenStaffAlertPlugin extends Plugin
 		return weapon != null && (weapon.getId() == ItemID.DRAMEN_STAFF
 			|| weapon.getId() == ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF);
 	}
+
+	boolean hasStaffInInventory()
+	{
+		ItemContainer inventory = client.getItemContainer(InventoryID.INV);
+		return inventory != null && (inventory.contains(ItemID.DRAMEN_STAFF)
+			|| inventory.contains(ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF));
+	}
 }

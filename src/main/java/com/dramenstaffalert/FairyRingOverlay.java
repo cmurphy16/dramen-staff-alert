@@ -17,6 +17,7 @@ public class FairyRingOverlay extends Overlay
 {
 	private static final Color RED_FILL = new Color(255, 0, 0, 50);
 	private static final Color GREEN_FILL = new Color(0, 255, 0, 50);
+	private static final Color YELLOW_FILL = new Color(255, 255, 0, 50);
 
 	private final Client client;
 	private final DramenStaffAlertPlugin plugin;
@@ -33,9 +34,23 @@ public class FairyRingOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		boolean staffRequirementMet = plugin.meetsFairyRingStaffRequirement();
-		Color outline = staffRequirementMet ? Color.GREEN : Color.RED;
-		Color fill = staffRequirementMet ? GREEN_FILL : RED_FILL;
+		Color outline;
+		Color fill;
+		if (plugin.meetsFairyRingStaffRequirement())
+		{
+			outline = Color.GREEN;
+			fill = GREEN_FILL;
+		}
+		else if (plugin.hasStaffInInventory())
+		{
+			outline = Color.YELLOW;
+			fill = YELLOW_FILL;
+		}
+		else
+		{
+			outline = Color.RED;
+			fill = RED_FILL;
+		}
 
 		for (GameObject ring : plugin.getFairyRings())
 		{
