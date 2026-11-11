@@ -54,6 +54,7 @@ public class DramenStaffAlertPlugin extends Plugin
 	private boolean active;
 
 	@Provides
+	@SuppressWarnings("unused") // Called by Guice to provide the plugin configuration.
 	DramenStaffAlertConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(DramenStaffAlertConfig.class);
@@ -102,18 +103,21 @@ public class DramenStaffAlertPlugin extends Plugin
 	}
 
 	@Subscribe
+	@SuppressWarnings("unused") // Called by RuneLite's event bus.
 	public void onGameObjectSpawned(GameObjectSpawned event)
 	{
 		trackFairyRing(event.getGameObject());
 	}
 
 	@Subscribe
+	@SuppressWarnings("unused") // Called by RuneLite's event bus.
 	public void onGameObjectDespawned(GameObjectDespawned event)
 	{
 		fairyRings.remove(event.getGameObject());
 	}
 
 	@Subscribe
+	@SuppressWarnings("unused") // Called by RuneLite's event bus.
 	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
 		MenuAction action = event.getMenuAction();
@@ -133,6 +137,7 @@ public class DramenStaffAlertPlugin extends Plugin
 	}
 
 	@Subscribe
+	@SuppressWarnings("unused") // Called by RuneLite's event bus.
 	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() == GameState.LOADING
