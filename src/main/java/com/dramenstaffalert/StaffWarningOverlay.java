@@ -23,6 +23,7 @@ public class StaffWarningOverlay extends Overlay
 	private final DramenStaffAlertPlugin plugin;
 	private final DramenStaffAlertConfig config;
 	private boolean warningTriggered;
+	private boolean missingStaffWarning;
 	private int warningStartCycle;
 
 	@Inject
@@ -47,14 +48,20 @@ public class StaffWarningOverlay extends Overlay
 			}
 			return null;
 		}
-		if (!config.showOverheadWarning() || plugin.meetsFairyRingStaffRequirement())
+		if (!warningTriggered)
+		{
+			return null;
+		}
+		boolean warningEnabled = missingStaffWarning ? config.showMissingStaffWarning() : config.showOverheadWarning();
+		if (!warningEnabled || plugin.meetsFairyRingStaffRequirement()
+			|| missingStaffWarning == plugin.hasStaffInInventory())
 		{
 			resetWarning();
 			return null;
 		}
 
 		Player player = client.getLocalPlayer();
-		String message = config.overheadWarningMessage();
+		String message = missingStaffWarning ? config.missingStaffWarningMessage() : config.overheadWarningMessage();
 		if (player == null || message == null || message.trim().isEmpty())
 		{
 			resetWarning();
@@ -71,15 +78,22 @@ public class StaffWarningOverlay extends Overlay
 		Point location = player.getCanvasTextLocation(graphics, message, player.getLogicalHeight() + 40);
 		if (location != null)
 		{
-			OverlayUtil.renderTextLocation(graphics, location, message, Color.YELLOW);
+			OverlayUtil.renderTextLocation(graphics, location, message, missingStaffWarning ? Color.RED : Color.YELLOW);
 		}
 		return null;
 	}
 
 	void triggerWarning()
 	{
-		if (config.showOverheadWarning() && client.getGameState() == GameState.LOGGED_IN
-			&& !plugin.meetsFairyRingStaffRequirement())
+		resetWarning();
+		if (client.getGameState() != GameState.LOGGED_IN || plugin.meetsFairyRingStaffRequirement())
+		{
+			return;
+		}
+
+		missingStaffWarning = !plugin.hasStaffInInventory();
+		boolean warningEnabled = missingStaffWarning ? config.showMissingStaffWarning() : config.showOverheadWarning();
+		if (warningEnabled)
 		{
 			warningTriggered = true;
 			warningStartCycle = client.getGameCycle();
@@ -89,6 +103,7 @@ public class StaffWarningOverlay extends Overlay
 	void resetWarning()
 	{
 		warningTriggered = false;
+		missingStaffWarning = false;
 		warningStartCycle = 0;
 	}
 }

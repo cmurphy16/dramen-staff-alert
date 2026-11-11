@@ -77,8 +77,8 @@ public interface DramenStaffAlertConfig extends Config
 	@ConfigItem(
 		keyName = "showOverheadWarning",
 		position = 6,
-		name = "Show overhead warning",
-		description = "Show a local overhead reminder when clicking a fairy ring while a required staff is not equipped"
+		name = "Show equip staff warning",
+		description = "Show a local overhead reminder when clicking a fairy ring with a required staff in inventory but not equipped"
 	)
 	default boolean showOverheadWarning()
 	{
@@ -88,11 +88,33 @@ public interface DramenStaffAlertConfig extends Config
 	@ConfigItem(
 		keyName = "overheadWarningMessage",
 		position = 7,
-		name = "Overhead warning message",
+		name = "Equip staff warning message",
 		description = "Custom text displayed above your player; this message is only visible to you"
 	)
 	default String overheadWarningMessage()
 	{
 		return "Equip your staff";
+	}
+
+	@ConfigItem(
+		keyName = "showMissingStaffWarning",
+		position = 8,
+		name = "Show missing staff warning",
+		description = "Show a local overhead warning when clicking a fairy ring without a required staff equipped or in inventory"
+	)
+	default boolean showMissingStaffWarning()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "missingStaffWarningMessage",
+		position = 9,
+		name = "Missing staff warning message",
+		description = "Custom text displayed above your player when a required staff is missing; only visible to you"
+	)
+	default String missingStaffWarningMessage()
+	{
+		return "You need a Dramen or Lunar staff";
 	}
 }
