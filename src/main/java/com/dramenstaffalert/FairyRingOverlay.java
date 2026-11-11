@@ -15,6 +15,9 @@ import net.runelite.client.ui.overlay.OverlayUtil;
 
 public class FairyRingOverlay extends Overlay
 {
+	private static final Color RED_FILL = new Color(255, 0, 0, 50);
+	private static final Color GREEN_FILL = new Color(0, 255, 0, 50);
+
 	private final Client client;
 	private final DramenStaffAlertPlugin plugin;
 
@@ -30,6 +33,10 @@ public class FairyRingOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		boolean staffRequirementMet = plugin.meetsFairyRingStaffRequirement();
+		Color outline = staffRequirementMet ? Color.GREEN : Color.RED;
+		Color fill = staffRequirementMet ? GREEN_FILL : RED_FILL;
+
 		for (GameObject ring : plugin.getFairyRings())
 		{
 			if (ring.getWorldView() != client.getTopLevelWorldView()
@@ -41,8 +48,8 @@ public class FairyRingOverlay extends Overlay
 			Polygon tile = Perspective.getCanvasTilePoly(client, ring.getLocalLocation());
 			if (tile != null)
 			{
-				OverlayUtil.renderPolygon(graphics, tile, Color.RED);
-				graphics.setColor(new Color(255, 0, 0, 50));
+				OverlayUtil.renderPolygon(graphics, tile, outline);
+				graphics.setColor(fill);
 				graphics.fillPolygon(tile);
 			}
 		}

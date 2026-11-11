@@ -6,12 +6,18 @@ import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
+import net.runelite.api.Item;
+import net.runelite.api.ItemContainer;
 import net.runelite.api.ObjectComposition;
 import net.runelite.api.Tile;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.gameval.ObjectID;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.VarbitID;
+import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -125,5 +131,24 @@ public class DramenStaffAlertPlugin extends Plugin
 	Set<GameObject> getFairyRings()
 	{
 		return fairyRings;
+	}
+
+	boolean meetsFairyRingStaffRequirement()
+	{
+		return client.getVarbitValue(VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) == 1
+			|| hasStaffEquipped();
+	}
+
+	private boolean hasStaffEquipped()
+	{
+		ItemContainer equipment = client.getItemContainer(InventoryID.WORN);
+		if (equipment == null)
+		{
+			return false;
+		}
+
+		Item weapon = equipment.getItem(KitType.WEAPON.getIndex());
+		return weapon != null && (weapon.getId() == ItemID.DRAMEN_STAFF
+			|| weapon.getId() == ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF);
 	}
 }
