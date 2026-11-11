@@ -49,11 +49,19 @@ public class FairyRingOverlay extends Overlay
 		}
 		else if (plugin.hasStaffInInventory())
 		{
+			if (!config.highlightInventory())
+			{
+				return null;
+			}
 			outline = Color.YELLOW;
 			fill = YELLOW_FILL;
 		}
 		else
 		{
+			if (!config.highlightMissing())
+			{
+				return null;
+			}
 			outline = Color.RED;
 			fill = RED_FILL;
 		}
