@@ -78,7 +78,7 @@ public interface DramenStaffAlertConfig extends Config
 		keyName = "showOverheadWarning",
 		position = 6,
 		name = "Show overhead warning",
-		description = "Show a local overhead reminder when a staff is required but not equipped"
+		description = "Show a local overhead reminder when clicking a fairy ring while a required staff is not equipped"
 	)
 	default boolean showOverheadWarning()
 	{

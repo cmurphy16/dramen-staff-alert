@@ -9,11 +9,13 @@ import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.MenuAction;
 import net.runelite.api.ObjectComposition;
 import net.runelite.api.Tile;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.gameval.ObjectID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.InventoryID;
@@ -112,6 +114,25 @@ public class DramenStaffAlertPlugin extends Plugin
 	}
 
 	@Subscribe
+	public void onMenuOptionClicked(MenuOptionClicked event)
+	{
+		MenuAction action = event.getMenuAction();
+		if (action != MenuAction.GAME_OBJECT_FIRST_OPTION
+			&& action != MenuAction.GAME_OBJECT_SECOND_OPTION
+			&& action != MenuAction.GAME_OBJECT_THIRD_OPTION
+			&& action != MenuAction.GAME_OBJECT_FOURTH_OPTION
+			&& action != MenuAction.GAME_OBJECT_FIFTH_OPTION)
+		{
+			return;
+		}
+
+		if (isFairyRing(event.getId()))
+		{
+			staffWarningOverlay.triggerWarning();
+		}
+	}
+
+	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() == GameState.LOADING
@@ -129,18 +150,23 @@ public class DramenStaffAlertPlugin extends Plugin
 			return;
 		}
 
-		ObjectComposition definition = client.getObjectDefinition(object.getId());
+		if (isFairyRing(object.getId()))
+		{
+			fairyRings.add(object);
+		}
+	}
+
+	private boolean isFairyRing(int objectId)
+	{
+		ObjectComposition definition = client.getObjectDefinition(objectId);
 		if (definition.getImpostorIds() != null)
 		{
 			definition = definition.getImpostor();
 		}
 		// Match the named center object, excluding decorative ring edges and corners.
-		if (definition != null && ("Fairy ring".equalsIgnoreCase(definition.getName())
+		return definition != null && ("Fairy ring".equalsIgnoreCase(definition.getName())
 			|| definition.getId() == ObjectID.POH_FAIRY_RING
-			|| definition.getId() == ObjectID.POH_SPIRIT_RING))
-		{
-			fairyRings.add(object);
-		}
+			|| definition.getId() == ObjectID.POH_SPIRIT_RING);
 	}
 
 	Set<GameObject> getFairyRings()

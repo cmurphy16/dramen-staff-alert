@@ -61,12 +61,7 @@ public class StaffWarningOverlay extends Overlay
 			return null;
 		}
 
-		if (!warningTriggered)
-		{
-			warningTriggered = true;
-			warningStartCycle = client.getGameCycle();
-		}
-		if (client.getGameCycle() - warningStartCycle >= WARNING_DURATION_CYCLES)
+		if (!warningTriggered || client.getGameCycle() - warningStartCycle >= WARNING_DURATION_CYCLES)
 		{
 			return null;
 		}
@@ -79,6 +74,16 @@ public class StaffWarningOverlay extends Overlay
 			OverlayUtil.renderTextLocation(graphics, location, message, Color.YELLOW);
 		}
 		return null;
+	}
+
+	void triggerWarning()
+	{
+		if (config.showOverheadWarning() && client.getGameState() == GameState.LOGGED_IN
+			&& !plugin.meetsFairyRingStaffRequirement())
+		{
+			warningTriggered = true;
+			warningStartCycle = client.getGameCycle();
+		}
 	}
 
 	void resetWarning()
